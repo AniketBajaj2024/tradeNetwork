@@ -60,7 +60,7 @@ const wss = new WebSocket.Server({ server });
 
 // Enable CORS with specific origin
 app.use(cors({
-  origin: 'http://localhost:3000', // Allow requests from this origin (your React frontend)
+  origin: 'http://localhost:5000', // Allow requests from this origin (your React frontend)
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
   allowedHeaders: ['Content-Type'], // Allowed headers
 }));
@@ -80,7 +80,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to the Intergalactic Trade Network API');
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
