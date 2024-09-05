@@ -37,8 +37,6 @@
 // });
 
 
-
-// after WebSocket
 const express = require('express');
 const http = require('http');
 const bodyParser = require('body-parser');
@@ -60,8 +58,12 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-// Enable CORS
-app.use(cors());
+// Enable CORS with specific origin
+app.use(cors({
+  origin: 'http://localhost:3000', // Allow requests from this origin (your React frontend)
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+  allowedHeaders: ['Content-Type'], // Allowed headers
+}));
 
 // Middleware
 app.use(bodyParser.json());
