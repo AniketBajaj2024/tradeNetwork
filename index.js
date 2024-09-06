@@ -69,6 +69,16 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
+// WebSocket server to handle real-time updates
+wss.on('connection', (ws) => {
+    console.log('New WebSocket connection established.');
+  
+    ws.on('close', () => {
+      console.log('WebSocket connection closed.');
+    });
+  });
+
+  
 // Route middlewares
 app.use('/api/trades', tradeRoutes);
 app.use('/api/cargo', cargoRoutes);
