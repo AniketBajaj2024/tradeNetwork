@@ -42,7 +42,7 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const WebSocket = require('ws');
 const cors = require('cors'); // Import the CORS package
-const connectDB = require('./src/database/database')(wss);
+const connectDB = require('./src/database/database');
 
 const analyticsRoutes = require('./src/api/analytics/analyticsRoutes');
 const eventEmitter = require('./src/events/eventHandlers');
