@@ -4,7 +4,6 @@
 // const dotenv = require('dotenv');
 // const connectDB = require('./src/database/database');
 
-// // Importing routes
 // const tradeRoutes = require('./src/api/trades/tradeRoutes');
 // const cargoRoutes = require('./src/api/cargo/cargoRoutes');
 // const inventoryRoutes = require('./src/api/inventory/inventoryRoutes');
@@ -15,7 +14,6 @@
 
 // const app = express();
 
-// // Middleware
 // app.use(bodyParser.json());
 // app.use(morgan('dev'));
 
@@ -44,10 +42,8 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const WebSocket = require('ws');
 const cors = require('cors'); // Import the CORS package
-const connectDB = require('./src/database/database');
-const tradeRoutes = require('./src/api/trades/tradeRoutes');
-const cargoRoutes = require('./src/api/cargo/cargoRoutes');
-const inventoryRoutes = require('./src/api/inventory/inventoryRoutes');
+const connectDB = require('./src/database/database')(wss);
+
 const analyticsRoutes = require('./src/api/analytics/analyticsRoutes');
 const eventEmitter = require('./src/events/eventHandlers');
 
@@ -60,9 +56,10 @@ const wss = new WebSocket.Server({ server });
 
 // Enable CORS with specific origin
 app.use(cors({
-  origin: 'http://localhost:3000', // Allow requests from this origin (your React frontend)
+  origin: '*', // Allow requests from this origin (your React frontend)
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
   allowedHeaders: ['Content-Type'], // Allowed headers
+  credentials: true,
 }));
 
 // Middleware
@@ -70,9 +67,13 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 // WebSocket server to handle real-time updates
-wss.on('connection', (ws) => {
-    console.log('New WebSocket connection established.');
+wss.on('connection', (ws , req) => {
+    console.log('New WebSocket connection established.' , req.socket.remoteAddress);
   
+    ws.on('message', (message) => {
+      console.log('Received message:', message);
+    });
+    
     ws.on('close', () => {
       console.log('WebSocket connection closed.');
     });
@@ -82,8 +83,11 @@ wss.on('connection', (ws) => {
   });
 
   
+const tradeRoutes = require('./src/api/trades/tradeRoutes')(wss);
+const cargoRoutes = require('./src/api/cargo/cargoRoutes')(wss);
+const inventoryRoutes = require('./src/api/inventory/inventoryRoutes')(wss);
 // Route middlewares
-app.use('/api/trades', tradeRoutes);
+app.use('/api/trades', tradeRoutes);  
 app.use('/api/cargo', cargoRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/updates', analyticsRoutes);
