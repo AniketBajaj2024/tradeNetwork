@@ -3,8 +3,8 @@ const express = require('express');
 const Trade = require('../../database/models/tradeModel');
 const eventEmitter = require('../../events/eventEmitter');
 
-
-const router = express.Router();
+module.exports = function(wss){
+  const router = express.Router();
 
 // Create a new trade
 router.post('/', async (req, res) => {
@@ -32,4 +32,7 @@ router.get('/:transactionId', async (req, res) => {
   }
 });
 
-module.exports = router;
+return router;
+}
+
+// module.exports = router;

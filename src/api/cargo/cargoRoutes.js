@@ -4,7 +4,8 @@ const Cargo = require('../../database/models/cargoModel');
 const eventEmitter = require('../../events/eventEmitter');
 
 
-const router = express.Router();
+module.exports = function(wss){
+  const router = express.Router();
 
 // Create a new cargo shipment
 router.post('/', async (req, res) => {
@@ -31,4 +32,7 @@ router.get('/:shipmentId', async (req, res) => {
   }
 });
 
-module.exports = router;
+return router;
+
+// module.exports = router;
+}
